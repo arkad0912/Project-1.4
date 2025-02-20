@@ -1,5 +1,8 @@
 # Makefile для создания миграций
 
+gen:
+	oapi-codegen -config openapi/.openapi -include-tags tasks -package tasks openapi/openapi.yaml > ./internal/web/tasks/api.gen.go
+
 # Переменные которые будут использоваться в наших командах (Таргетах)
 DB_DSN := "postgres://postgres:yourpassword@localhost:5432/main?sslmode=disable"
 MIGRATE := migrate -path ./migrations -database $(DB_DSN)
