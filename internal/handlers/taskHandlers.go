@@ -9,19 +9,19 @@ import (
 	"ruchka/internal/web/tasks"
 )
 
-type Handler struct {
-	Service *taskService.TaskService
+type TaskHandler struct {
+	taskService *taskService.TaskService
 }
 
-func NewHandler(service *taskService.TaskService) *Handler {
-	return &Handler{
-		Service: service,
+func NewTaskHandler(taskService *taskService.TaskService) *TaskHandler {
+	return &TaskHandler{
+		taskService: taskService,
 	}
 }
 
-func (h *Handler) GetTasks(_ context.Context, _ tasks.GetTasksRequestObject) (tasks.GetTasksResponseObject, error) {
+func (h *TaskHandler) GetTasks(_ context.Context, _ tasks.GetTasksRequestObject) (tasks.GetTasksResponseObject, error) {
 	// Получение всех задач из сервиса
-	allTasks, err := h.Service.GetAllTasks()
+	allTasks, err := h.taskService.GetAllTasks()
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +44,7 @@ func (h *Handler) GetTasks(_ context.Context, _ tasks.GetTasksRequestObject) (ta
 	return response, nil
 }
 
-func (h *Handler) PostTasks(_ context.Context, request tasks.PostTasksRequestObject) (tasks.PostTasksResponseObject, error) {
+func (h *TaskHandler) PostTasks(_ context.Context, request tasks.PostTasksRequestObject) (tasks.PostTasksResponseObject, error) {
 	// Распаковываем тело запроса напрямую, без декодера!
 	taskRequest := request.Body
 	// Обращаемся к сервису и создаем задачу
@@ -52,7 +52,7 @@ func (h *Handler) PostTasks(_ context.Context, request tasks.PostTasksRequestObj
 		Task:   *taskRequest.Task,
 		IsDone: *taskRequest.IsDone,
 	}
-	createdTask, err := h.Service.CreateTask(taskToCreate)
+	createdTask, err := h.taskService.CreateTask(taskToCreate)
 
 	if err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func (h *Handler) PostTasks(_ context.Context, request tasks.PostTasksRequestObj
 	return response, nil
 }
 
-func (h *Handler) PatchTasksTaskId(ctx context.Context, request tasks.PatchTasksTaskIdRequestObject) (tasks.PatchTasksTaskIdResponseObject, error) {
+func (h *TaskHandler) PatchTasksTaskId(ctx context.Context, request tasks.PatchTasksTaskIdRequestObject) (tasks.PatchTasksTaskIdResponseObject, error) {
 	// Получаем ID задачи из запроса
 	taskID := request.TaskId
 
@@ -81,7 +81,7 @@ func (h *Handler) PatchTasksTaskId(ctx context.Context, request tasks.PatchTasks
 	}
 
 	// Вызываем метод сервиса для обновления задачи
-	updatedTaskResult, err := h.Service.UpdateTaskByID(uint(taskID), updatedTask)
+	updatedTaskResult, err := h.taskService.UpdateTaskByID(uint(taskID), updatedTask)
 	if err != nil {
 		return nil, err
 	}
@@ -96,12 +96,12 @@ func (h *Handler) PatchTasksTaskId(ctx context.Context, request tasks.PatchTasks
 	// Возвращаем ответ
 	return response, nil
 }
-func (h *Handler) DeleteTasksTaskId(ctx context.Context, request tasks.DeleteTasksTaskIdRequestObject) (tasks.DeleteTasksTaskIdResponseObject, error) {
+func (h *TaskHandler) DeleteTasksTaskId(ctx context.Context, request tasks.DeleteTasksTaskIdRequestObject) (tasks.DeleteTasksTaskIdResponseObject, error) {
 	// Получаем ID задачи из запроса
 	taskID := request.TaskId
 
 	// Вызываем метод сервиса для удаления задачи
-	err := h.Service.DeleteTaskByID(uint(taskID))
+	err := h.taskService.DeleteTaskByID(uint(taskID))
 	if err != nil {
 		return nil, err
 	}
