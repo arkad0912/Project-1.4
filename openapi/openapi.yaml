@@ -151,8 +151,16 @@ paths:
             type: integer
             format: uint
       responses:
-        '204':
+        '200':
           description: Task deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted_at:
+                    type: string
+                    format: date-time
         '404':
           description: Task not found
   /users/{userId}/tasks:
@@ -188,19 +196,6 @@ components:
           type: string
         password:
           type: string
-        created_at:
-          type: string
-          format: date-time
-          description: Timestamp when the user was created
-        updated_at:
-          type: string
-          format: date-time
-          description: Timestamp when the user was last updated
-        deleted_at:
-          type: string
-          format: date-time
-          nullable: true
-          description: Timestamp when the user was deleted (nullable)
     Task:
       type: object
       properties:

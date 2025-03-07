@@ -37,7 +37,9 @@ func (h *TaskHandler) GetTasks(_ context.Context, _ tasks.GetTasksRequestObject)
 			Task:   &tsk.Task,
 			IsDone: &tsk.IsDone,
 			UserId: &tsk.UserID,
+			//DeletedAt: &tsk.DeletedAt.Time, // Добавляем поле DeletedAt
 		}
+
 		response = append(response, task)
 	}
 
@@ -86,7 +88,12 @@ func (h *TaskHandler) GetUsersUserIdTasks(_ context.Context, request tasks.GetUs
 			Task:   &tsk.Task,
 			IsDone: &tsk.IsDone,
 			UserId: &tsk.UserID,
+			//DeletedAt: &tsk.DeletedAt.Time,
 		}
+		if tsk.DeletedAt.Valid {
+			task.DeletedAt = &tsk.DeletedAt.Time
+		}
+
 		response = append(response, task)
 	}
 
@@ -127,11 +134,15 @@ func (h *TaskHandler) DeleteTasksTaskId(ctx context.Context, request tasks.Delet
 	taskID := request.TaskId
 
 	// Вызываем метод сервиса для удаления задачи
-	err := h.taskService.DeleteTaskByID(uint(taskID))
+	deletedAt, err := h.taskService.DeleteTaskByID(uint(taskID))
 	if err != nil {
 		return nil, err
 	}
 
-	// Возвращаем статус 204 No Content
-	return tasks.DeleteTasksTaskId204Response{}, nil
+	// Возвращаем дату удаления в ответе
+	response := tasks.DeleteTasksTaskId200JSONResponse{
+		DeletedAt: &deletedAt,
+	}
+
+	return response, nil
 }

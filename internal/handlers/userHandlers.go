@@ -32,6 +32,7 @@ func (h *UserHandlers) GetUsers(_ context.Context, _ users.GetUsersRequestObject
 			// UpdatedAt: &usr.UpdatedAt,
 			// DeletedAt: &usr.DeletedAt.Time,
 		}
+
 		response = append(response, user)
 	}
 

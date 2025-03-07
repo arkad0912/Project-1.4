@@ -1,5 +1,7 @@
 package taskService
 
+import "time"
+
 type TaskService struct {
 	repo TaskRepository
 }
@@ -24,6 +26,6 @@ func (s *TaskService) UpdateTaskByID(id uint, task Task) (Task, error) {
 	return s.repo.UpdateTaskByID(id, task)
 }
 
-func (s *TaskService) DeleteTaskByID(id uint) error {
-	return s.repo.DeleteTaskByID(id)
+func (s *TaskService) DeleteTaskByID(id uint) (time.Time, error) {
+	return s.repo.DeleteTaskByID(id) // Возвращает дату удаления и ошибку
 }

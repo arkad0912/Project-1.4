@@ -1,6 +1,8 @@
 package taskService
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
@@ -8,7 +10,7 @@ type TaskRepository interface {
 	CreateTask(task Task) (Task, error)
 	GetAllTasks() ([]Task, error)
 	UpdateTaskByID(id uint, task Task) (Task, error)
-	DeleteTaskByID(id uint) error
+	DeleteTaskByID(id uint) (time.Time, error)    // Обновлено
 	GetTasksByUserID(userID uint) ([]Task, error) // Добавьте этот метод
 }
 
@@ -57,7 +59,16 @@ func (r *taskRepository) UpdateTaskByID(id uint, task Task) (Task, error) {
 	return existingTask, nil
 }
 
-func (r *taskRepository) DeleteTaskByID(id uint) error {
-	result := r.db.Delete(&Task{}, id)
-	return result.Error
+func (r *taskRepository) DeleteTaskByID(id uint) (time.Time, error) {
+	// Получаем текущее время (дату удаления)
+	deletedAt := time.Now()
+
+	// Выполняем физическое удаление
+	result := r.db.Model(&Task{}).Where("id = ?", id).Update("deleted_at", deletedAt)
+	if result.Error != nil {
+		return time.Time{}, result.Error
+	}
+
+	// Возвращаем дату удаления
+	return deletedAt, nil
 }

@@ -204,12 +204,15 @@ type DeleteTasksTaskIdResponseObject interface {
 	VisitDeleteTasksTaskIdResponse(w http.ResponseWriter) error
 }
 
-type DeleteTasksTaskId204Response struct {
+type DeleteTasksTaskId200JSONResponse struct {
+	DeletedAt *time.Time `json:"deleted_at,omitempty"`
 }
 
-func (response DeleteTasksTaskId204Response) VisitDeleteTasksTaskIdResponse(w http.ResponseWriter) error {
-	w.WriteHeader(204)
-	return nil
+func (response DeleteTasksTaskId200JSONResponse) VisitDeleteTasksTaskIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
 }
 
 type DeleteTasksTaskId404Response struct {
