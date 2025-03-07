@@ -155,7 +155,27 @@ paths:
           description: Task deleted successfully
         '404':
           description: Task not found
-
+  /users/{userId}/tasks:
+    get:
+      summary: Get tasks by user ID
+      tags:
+        - tasks
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: uint
+      responses:
+        '200':
+          description: A list of tasks for the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
 components:
   schemas:
     User:
@@ -191,3 +211,19 @@ components:
           type: string
         is_done:
           type: boolean
+        user_id:
+          type: integer
+          format: uint
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the task was created
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the task was last updated
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Timestamp when the task was deleted (nullable)

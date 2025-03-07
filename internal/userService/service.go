@@ -1,5 +1,7 @@
 package userService
 
+import "ruchka/internal/taskService"
+
 // UserService предоставляет методы для работы с пользователями.
 type UserService struct {
 	repo UserRepository
@@ -47,4 +49,13 @@ func (s *UserService) UpdateUser(id uint, user *User) (*User, error) {
 // DeleteUser удаляет пользователя по его ID.
 func (s *UserService) DeleteUser(id uint) error {
 	return s.repo.DeleteUser(id)
+}
+
+func (s *UserService) GetTasksForUser(userID uint) ([]taskService.Task, error) {
+	// Реализация метода для получения задач пользователя
+	user, err := s.repo.GetUserByID(userID)
+	if err != nil {
+		return nil, err
+	}
+	return user.Tasks, nil
 }

@@ -1,6 +1,10 @@
 package userService
 
-import "gorm.io/gorm"
+import (
+	//"ruchka/internal/taskService"
+
+	"gorm.io/gorm"
+)
 
 // UserRepository определяет интерфейс для работы с пользователями в базе данных.
 type UserRepository interface {

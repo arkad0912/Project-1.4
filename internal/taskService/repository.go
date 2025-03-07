@@ -9,6 +9,7 @@ type TaskRepository interface {
 	GetAllTasks() ([]Task, error)
 	UpdateTaskByID(id uint, task Task) (Task, error)
 	DeleteTaskByID(id uint) error
+	GetTasksByUserID(userID uint) ([]Task, error) // Добавьте этот метод
 }
 
 type taskRepository struct {
@@ -20,16 +21,19 @@ func NewTaskRepository(db *gorm.DB) *taskRepository {
 }
 
 func (r *taskRepository) CreateTask(task Task) (Task, error) {
-	result := r.db.Create(&task)
-	if result.Error != nil {
-		return Task{}, result.Error
-	}
-	return task, nil
+	err := r.db.Create(&task).Error
+	return task, err
 }
 
 func (r *taskRepository) GetAllTasks() ([]Task, error) {
 	var tasks []Task
 	err := r.db.Find(&tasks).Error
+	return tasks, err
+}
+
+func (r *taskRepository) GetTasksByUserID(userID uint) ([]Task, error) {
+	var tasks []Task
+	err := r.db.Where("user_id = ?", userID).Find(&tasks).Error
 	return tasks, err
 }
 

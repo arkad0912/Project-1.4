@@ -4,6 +4,10 @@ type TaskService struct {
 	repo TaskRepository
 }
 
+func (s *TaskService) GetTasksByUserID(userID uint) ([]Task, error) {
+	return s.repo.GetTasksByUserID(userID)
+}
+
 func NewService(repo TaskRepository) *TaskService {
 	return &TaskService{repo: repo}
 }
