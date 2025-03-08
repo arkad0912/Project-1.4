@@ -21,7 +21,7 @@ type Task struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 
 	// DeletedAt Timestamp when the task was deleted (nullable)
-	DeletedAt *time.Time `json:"deleted_at"`
+	DeletedAt *time.Time `json:"deleted_at,omitempty"`
 	Id        *uint      `json:"id,omitempty"`
 	IsDone    *bool      `json:"is_done,omitempty"`
 	Task      *string    `json:"task,omitempty"`

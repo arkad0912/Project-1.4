@@ -220,5 +220,4 @@ components:
         deleted_at:
           type: string
           format: date-time
-          nullable: true
           description: Timestamp when the task was deleted (nullable)

@@ -134,15 +134,11 @@ func (h *TaskHandler) DeleteTasksTaskId(ctx context.Context, request tasks.Delet
 	taskID := request.TaskId
 
 	// Вызываем метод сервиса для удаления задачи
-	deletedAt, err := h.taskService.DeleteTaskByID(uint(taskID))
+	err := h.taskService.DeleteTaskByID(uint(taskID))
 	if err != nil {
 		return nil, err
 	}
 
-	// Возвращаем дату удаления в ответе
-	response := tasks.DeleteTasksTaskId200JSONResponse{
-		DeletedAt: &deletedAt,
-	}
-
-	return response, nil
+	// Возвращаем пустой ответ с кодом статуса 200
+	return tasks.DeleteTasksTaskId200JSONResponse{}, nil
 }
